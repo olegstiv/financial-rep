@@ -19,7 +19,7 @@ object Libraries {
         const val springDoc = "2.3.0"
         const val dotenv = "2.5.4"
         const val jacsonKotlin = "2.14.2"
-        const val liquibase = "4.20.0"
+        const val liquibase = "4.25.0"
         const val hibernateValidator = "8.0.1.Final"
 
 //        const val kotlinCoroutine = "1.7.2"

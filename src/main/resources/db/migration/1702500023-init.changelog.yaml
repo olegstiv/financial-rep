@@ -1,0 +1,157 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1702500023-init-uuid
+      author: Oleg Kravchuk
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+  - changeSet:
+      id: 1702500023-create-users
+      author: Oleg Kravchuk
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValue: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+  - changeSet:
+      id: 1702500023-create-categories
+      author: Oleg Kravchuk
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_categories_users
+                    references: users(id)
+        - createIndex:
+            tableName: categories
+            indexName: idx_categories_name_user_id
+            unique: true
+            columns:
+              - column:
+                  name: name
+              - column:
+                  name: user_id
+  - changeSet:
+      id: 1702500023-create-wallets
+      author: Oleg Kravchuk
+      changes:
+        - createTable:
+            tableName: wallets
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_wallets_users
+                    references: users(id)
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: decimal(10,2)
+                  constraints:
+                    defaultValue: 0
+                    nullable: false
+
+  - changeSet:
+      id: 1702500023-create-transaction
+      author: Oleg Kravchuk
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: wallet_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transactions_wallets
+                    references: wallets(id)
+              - column:
+                  name: amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transactions_categories
+                    references: categories(id)
+              - column:
+                  name: date_time
+                  type: timestamp
+                  defaultValue: now()
+                  constraints:
+                    nullable: false

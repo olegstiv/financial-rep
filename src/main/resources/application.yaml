@@ -28,7 +28,7 @@ spring:
         jdbc:
           batch_size: 2000
   liquibase:
-    change-log: classpath:migration/master.changelog.yaml
+    change-log: classpath:db/master.changelog.yaml
     enabled: true
 
 springdoc:

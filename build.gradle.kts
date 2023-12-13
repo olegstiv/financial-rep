@@ -27,7 +27,6 @@ dependencies {
     implementation(Libraries.kotlinLogging)
     implementation(Libraries.liquibase)
 
-
     implementation(Libraries.jacksonKotlin)
     implementation(Libraries.kotlinStdLib)
     runtimeOnly(Libraries.postgresql)
@@ -39,6 +38,11 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+configurations {
+    all {
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    }
+}
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
