@@ -1,0 +1,42 @@
+server:
+  port: ${PORT:8080}
+  url: ${SERVER_URL:http://localhost:8080}
+
+spring:
+  #  autoconfigure:
+  #    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  codec:
+    max-in-memory-size: 10MB
+  security:
+    user:
+      name: admin
+      password: admin
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  profiles:
+    active: ${ACTIVE_PROFILE:local}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 2000
+  liquibase:
+    change-log: classpath:migration/master.changelog.yaml
+    enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+
+logging:
+  file:
+    path: logs
