@@ -16,20 +16,20 @@ class CategoryEntity(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    var user: UserEntity,
-
     @Column(name = "description")
     var description: String? = null,
 
     @Column(name = "icon")
     var icon: String? = null,
 
-    ) {
+) {
 
     @Id
     @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
     val id: UUID = UUID.randomUUID()
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    lateinit var user: UserEntity
 }

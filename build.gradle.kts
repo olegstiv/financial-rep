@@ -27,6 +27,10 @@ dependencies {
     implementation(Libraries.kotlinLogging)
     implementation(Libraries.liquibase)
 
+    // JWT
+    implementation("com.auth0:java-jwt")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
     implementation(Libraries.jacksonKotlin)
     implementation(Libraries.kotlinStdLib)
     runtimeOnly(Libraries.postgresql)

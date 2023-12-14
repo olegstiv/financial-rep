@@ -21,10 +21,6 @@ class WalletEntity(
     @Column(name = "id", updatable = false, nullable = false)
     val id: UUID = UUID.randomUUID(),
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    var user: UserEntity,
-
     @Column(name = "name", nullable = false)
     var name: String,
 
@@ -36,6 +32,10 @@ class WalletEntity(
     var balance: BigDecimal = BigDecimal.ZERO,
 
 ) {
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    lateinit var user: UserEntity
 
     fun addBalance(amount: BigDecimal) {
         balance += amount

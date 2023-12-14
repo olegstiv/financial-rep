@@ -28,7 +28,7 @@ class TransactionEntity(
     var amount: BigDecimal,
 
     @Column(name = "type", nullable = false)
-    var type: String,
+    var type: Type,
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
