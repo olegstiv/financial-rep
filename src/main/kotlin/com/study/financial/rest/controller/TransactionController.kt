@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/wallets/", produces = ["application/json"], consumes = ["application/json"])
+@RequestMapping("/transactions/", produces = ["application/json"], consumes = ["application/json"])
 @Tag(name = "Transaction", description = "API для работы с транзакциями")
 class TransactionController() :
     BaseCrudController<TransactionEntity, TransactionJpaRepository, Transaction, CreateTransaction>() {
