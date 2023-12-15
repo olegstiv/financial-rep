@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/wallets/", produces = ["application/json"], consumes = ["application/json"])
+@RequestMapping("/wallets/")
 @Tag(name = "Wallet", description = "API для работы с кошельком")
 class WalletController() : BaseCrudController<WalletEntity, WalletJpaRepository, Wallet, CreateWallet>() {
     override fun WalletEntity.toModel(): Wallet {

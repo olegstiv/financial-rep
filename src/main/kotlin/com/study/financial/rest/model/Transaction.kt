@@ -53,7 +53,7 @@ data class Transaction(
         format = "uuid",
         required = true,
     )
-    val walletId: Wallet,
+    val wallet: Wallet,
 
     @field:Schema(description = "Сумма транзакции", required = true, example = "1000")
     val amount: Double,

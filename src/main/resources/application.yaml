@@ -1,16 +1,11 @@
 server:
   port: ${PORT:8080}
   url: ${SERVER_URL:http://localhost:8080}
-
+#  servlet:
+#    context-path: /api
 spring:
-  #  autoconfigure:
-  #    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   codec:
     max-in-memory-size: 10MB
-  security:
-    user:
-      name: admin
-      password: admin
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -36,7 +31,10 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui
-
+custom:
+  jwt:
+    secret: yourSecretKeyNeedsToBeLongEnoughUEUEUEUEUEUEUE01
+    expiration: 86400000
 logging:
   file:
     path: logs

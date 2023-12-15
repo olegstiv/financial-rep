@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/categories/", produces = ["application/json"], consumes = ["application/json"])
+@RequestMapping("/categories")
 @Tag(name = "Category", description = "API для работы с категорями")
 class CategoryController() :
     BaseCrudController<CategoryEntity, CategoryJpaRepository, Category, CreateCategory>() {
@@ -19,7 +19,6 @@ class CategoryController() :
             name = name,
             description = description,
             icon = icon,
-
         )
     }
 }

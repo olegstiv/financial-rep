@@ -5,20 +5,22 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.util.UUID
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCrypt
+import java.util.UUID
 
 @Entity
 @Table(name = "users")
 class UserEntity(
     @Column(name = "username", unique = true, nullable = false)
-    var username: String,
+    var login: String,
 
     password: String,
 
     @Column(name = "email", unique = true, nullable = false)
     var email: String,
-) {
+) : UserDetails {
 
     init {
         setPassword(password)
@@ -39,4 +41,23 @@ class UserEntity(
     fun setPassword(password: String) {
         passwordHash = BCrypt.hashpw(password, BCrypt.gensalt())
     }
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return mutableListOf()
+    }
+
+    override fun getPassword(): String {
+        return passwordHash
+    }
+
+    override fun getUsername(): String {
+        return login
+    }
+
+    override fun isAccountNonExpired() = true
+
+    override fun isAccountNonLocked() = true
+    override fun isCredentialsNonExpired() = true
+
+    override fun isEnabled() = true
 }

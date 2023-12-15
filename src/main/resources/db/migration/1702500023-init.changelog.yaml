@@ -155,3 +155,15 @@ databaseChangeLog:
                   defaultValue: now()
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 1702500023-create-category-icon
+      author: Oleg Kravchuk
+      changes:
+        - addColumn:
+            tableName: categories
+            columns:
+              - column:
+                  name: icon
+                  type: varchar(30)
+                  constraints:
+                    nullable: true

@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/transactions/", produces = ["application/json"], consumes = ["application/json"])
+@RequestMapping("/transactions/")
 @Tag(name = "Transaction", description = "API для работы с транзакциями")
 class TransactionController() :
     BaseCrudController<TransactionEntity, TransactionJpaRepository, Transaction, CreateTransaction>() {
     override fun TransactionEntity.toModel(): Transaction {
         return Transaction(
             id = id,
-            walletId = Wallet(
+            wallet = Wallet(
                 id = wallet.id,
                 name = wallet.name,
                 type = wallet.type,
