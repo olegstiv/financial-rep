@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.util.UUID
+import org.hibernate.annotations.Formula
 
 @Entity
 @Table(name = "wallets")
@@ -36,6 +37,14 @@ class WalletEntity(
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     lateinit var user: UserEntity
+
+    @Formula("(SELECT SUM(case when t.type = 'INCOME' then t.amount else -t.amount end)  FROM transactions t WHERE t.wallet_id = id)")
+    private var getBalance: BigDecimal? = null
+
+    @Transient
+    var actualBalance: BigDecimal = BigDecimal.ZERO
+        get() = balance + (getBalance ?: BigDecimal.ZERO)
+        private set
 
     fun addBalance(amount: BigDecimal) {
         balance += amount

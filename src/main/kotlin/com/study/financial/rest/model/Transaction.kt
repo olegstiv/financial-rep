@@ -33,7 +33,12 @@ data class CreateTransaction(
     )
     val categoryId: String? = null,
 
-    @field:Schema(description = "Дата и время транзакции", required = true, example = "2021-07-01T00:00:00", format = "date-time")
+    @field:Schema(
+        description = "Дата и время транзакции",
+        required = true,
+        example = "2021-07-01T00:00:00",
+        format = "date-time",
+    )
     val dateTime: String? = null,
 
 )
@@ -48,9 +53,7 @@ data class Transaction(
     val id: UUID,
 
     @field:Schema(
-        description = "Уникальный идентификатор кошелька",
-        example = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        format = "uuid",
+        description = "Кошелек",
         required = true,
     )
     val wallet: Wallet,

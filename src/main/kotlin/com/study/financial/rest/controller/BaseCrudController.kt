@@ -2,16 +2,15 @@ package com.study.financial.rest.controller
 
 import com.study.financial.busines.ICrudService
 import com.study.financial.busines.service.UserService
+import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.util.SecurityUtil
 import com.study.financial.validation.ValidUUID
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import java.util.UUID
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -22,9 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
-abstract class BaseCrudController<E : Any, R : JpaRepository<E, UUID>, M : Any, CM> {
+abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : Any, CM> {
     @Autowired
     lateinit var service: ICrudService<E, R, CM>
 

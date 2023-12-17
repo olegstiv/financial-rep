@@ -1,7 +1,7 @@
 package com.study.financial.jpa.repository
 
 import com.study.financial.jpa.entity.WalletEntity
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.UUID
+import org.springframework.stereotype.Repository
 
-interface WalletJpaRepository : JpaRepository<WalletEntity, UUID>
+@Repository
+interface WalletJpaRepository : JpaRepositoryWithUserId<WalletEntity>

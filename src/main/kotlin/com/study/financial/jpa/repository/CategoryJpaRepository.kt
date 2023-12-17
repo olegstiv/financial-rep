@@ -1,7 +1,7 @@
 package com.study.financial.jpa.repository
 
 import com.study.financial.jpa.entity.CategoryEntity
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.UUID
+import org.springframework.stereotype.Repository
 
-interface CategoryJpaRepository : JpaRepository<CategoryEntity, UUID>
+@Repository
+interface CategoryJpaRepository : JpaRepositoryWithUserId<CategoryEntity>

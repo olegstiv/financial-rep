@@ -1,7 +1,7 @@
 package com.study.financial.rest.controller
 
 import com.study.financial.jpa.entity.TransactionEntity
-import com.study.financial.jpa.repository.TransactionJpaRepository
+import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.rest.model.Category
 import com.study.financial.rest.model.CreateTransaction
 import com.study.financial.rest.model.Transaction
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/transactions/")
 @Tag(name = "Transaction", description = "API для работы с транзакциями")
 class TransactionController() :
-    BaseCrudController<TransactionEntity, TransactionJpaRepository, Transaction, CreateTransaction>() {
+    BaseCrudController<TransactionEntity, JpaRepositoryWithUserId<TransactionEntity>, Transaction, CreateTransaction>() {
     override fun TransactionEntity.toModel(): Transaction {
         return Transaction(
             id = id,
@@ -22,7 +22,8 @@ class TransactionController() :
                 id = wallet.id,
                 name = wallet.name,
                 type = wallet.type,
-                balance = wallet.balance.toDouble(),
+                balance = wallet.actualBalance
+                    .let { if (type == TransactionEntity.Type.EXPENSE) it - amount else it + amount }.toDouble(),
             ),
             amount = amount.toDouble(),
             type = type,

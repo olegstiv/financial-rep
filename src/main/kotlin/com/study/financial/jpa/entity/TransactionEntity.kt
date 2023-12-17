@@ -2,6 +2,8 @@ package com.study.financial.jpa.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
@@ -27,6 +29,7 @@ class TransactionEntity(
     @Column(name = "amount", nullable = false)
     var amount: BigDecimal,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     var type: Type,
 

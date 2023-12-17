@@ -8,4 +8,5 @@ interface UserJpaRepository : JpaRepository<UserEntity, UUID> {
     fun findByLogin(login: String): UserEntity?
 
     fun findByLoginOrEmail(login: String, email: String): UserEntity?
+
 }
