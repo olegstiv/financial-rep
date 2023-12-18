@@ -21,8 +21,6 @@ deploy-app:dev:
   dependencies:
     - build-app:dev
   needs:
-    - job: test-app:dev
-      artifacts: false
     - job: build-app:dev
       artifacts: true
   only:
