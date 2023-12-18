@@ -1,0 +1,37 @@
+include:
+  - .ci/ci-files/*.yaml
+
+stages:
+  - build
+  - test
+  - deploy
+
+.build-app:
+  stage: build
+  image: gradle:8.1.1-jdk21
+  script:
+    - ./gradlew build ${EXTENTIONS_ARGS}
+  artifacts:
+    paths:
+      - src/main/resources/
+      - build/libs/
+      - .ci/Dockerfile
+      - .ci/.env
+      - .ci/entrypoint.sh
+    expire_in: 1 day
+  tags:
+    - build-vm
+
+.deploy-app:
+  stage: deploy
+  image: docker:20.10.21
+  services:
+    - docker:20.10.21-dind
+  script:
+    - apk add gettext
+    - envsubst < .ci/.env > .env
+    - mv ./src/main/resources/*.yaml ./build/libs/
+    - mv ./src/main/resources/*.xml ./build/libs/
+    - docker build -t ${NAME} . --file .ci/Dockerfile
+    - docker ps -a -q --filter "name=${NAME}" | grep -q . && docker rm -f ${NAME} || true
+    - docker run -d --env-file=.env --network=${DOCKER_NET} -p ${EXT_PORT}:8443 --name ${NAME} ${NAME}
