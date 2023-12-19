@@ -1,6 +1,6 @@
 build-app:dev:
   extends:
-    - .build-app
+    - .build_template
   only:
     - develop
   variables:
@@ -17,12 +17,8 @@ deploy-app:dev:
     DB_PASS: financial
     DB_USER: financial
     SERVER_URL: 51.250.81.198
-    DOCKER_NET: worker
-  dependencies:
-    - build-app:dev
-  needs:
-    - job: build-app:dev
-      artifacts: true
+    DOCKER_NET: dev
+    PROJ: dev
   only:
     - develop
 

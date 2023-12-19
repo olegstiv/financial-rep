@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
+RUN ./gradlew build
+
 RUN chmod +x .ci/entrypoint.sh
 
 CMD ["/bin/bash", "-c", ".ci/entrypoint.sh"]
