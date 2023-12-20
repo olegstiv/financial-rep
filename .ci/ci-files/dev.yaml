@@ -17,8 +17,8 @@ deploy-app:dev:
     DB_PASS: financial
     DB_USER: financial
     SERVER_URL: 51.250.81.198
-    DOCKER_NET: dev
-    PROJ: dev
+    DOCKER_NET: study
+    PROJ: develop
   only:
     - develop
 

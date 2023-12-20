@@ -39,14 +39,7 @@ stages:
   before_script:
     - docker rm -f `docker ps -a --no-trunc | grep ${DOCKER_IMAGE_NAME} | awk '{ print $1}'` 2> /dev/null || true
   script:
-    - |
-        docker run -d \
-        --name ${CI_PROJECT_NAME}-${PROJ} \
-        --net=${DOCKER_NET} \
-        -v /etc/localtime:/etc/localtime \
-        --restart always \
-        --env-file .env \
-        ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+    - docker run -d --name ${CI_PROJECT_NAME}-${PROJ} --net=${DOCKER_NET} -v /etc/localtime:/etc/localtime --restart always --env-file .env ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
   tags:
     - oleg-deploy
 
