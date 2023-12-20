@@ -8,6 +8,7 @@ import com.study.financial.validation.ValidUUID
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import jakarta.validation.Valid
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -65,7 +66,10 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(summary = "Создать элемент", security = [SecurityRequirement(name = "Auth JWT")])
-    fun create(@RequestBody model: CM): ResponseEntity<M> {
+    fun create(
+        @Valid @RequestBody
+        model: CM,
+    ): ResponseEntity<M> {
         val created = service.save(currentUserId, model).toModel()
         return ResponseEntity.status(HttpStatus.CREATED).body(created)
     }
@@ -82,7 +86,8 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
             format = "uuid",
         )
         id: String,
-        @RequestBody model: CM,
+        @Valid @RequestBody
+        model: CM,
     ): ResponseEntity<M> {
         val updated = service.update(currentUserId, UUID.fromString(id), model).toModel()
         return ResponseEntity.ok(updated)

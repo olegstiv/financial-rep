@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PositiveOrZero
+import jakarta.validation.constraints.Size
 import java.util.UUID
 
 data class CreateWallet(
     @field:NotBlank(message = "Название кошелька не должно быть пустым")
     @field:NotNull(message = "Название кошелька не должно быть null")
     @field:Schema(description = "Название кошелька", required = true, example = "Карта Тинькоф")
+    @field:Size(min = 3, max = 255, message = "Название кошелька должно быть от 3 до 255 символов")
     val name: String? = null,
 
     @field:NotNull(message = "Тип кошелька не должен быть null")

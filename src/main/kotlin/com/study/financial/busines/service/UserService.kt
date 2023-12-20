@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 
 @Service
 class UserService(
@@ -27,14 +28,14 @@ class UserService(
     }
 
     fun register(registerRequest: RegisterRequest): AuthenticationResponse {
-        if (userJpaRepository.findByLoginOrEmail(registerRequest.username, registerRequest.email) != null) {
+        if (userJpaRepository.findByLoginOrEmail(registerRequest.username!!, registerRequest.email!!) != null) {
             throw RegisterException()
         }
 
         val user = UserEntity(
             email = registerRequest.email,
             login = registerRequest.username,
-            password = registerRequest.password,
+            password = registerRequest.password!!,
         )
 
         userJpaRepository.save(user)
@@ -44,7 +45,7 @@ class UserService(
         return AuthenticationResponse(token)
     }
 
-    fun authenticate(authenticationRequest: AuthenticationRequest): AuthenticationResponse {
+    fun authenticate(@Validated authenticationRequest: AuthenticationRequest): AuthenticationResponse {
         authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 authenticationRequest.username,
@@ -52,7 +53,7 @@ class UserService(
             ),
         )
 
-        val user = userJpaRepository.findByLogin(authenticationRequest.username)
+        val user = userJpaRepository.findByLogin(authenticationRequest.username!!)
             ?: throw EntityNotFoundException("User not found")
 
         return AuthenticationResponse(jwtService.generateToken(user))
