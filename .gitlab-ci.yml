@@ -3,35 +3,46 @@ include:
 
 stages:
   - build
-  - test
   - deploy
+variables:
+  DOCKER_IMAGE_NAME: "gitlab.smartpricing.btc-s.ru:5555/o.kravchuk/${CI_PROJECT_NAME}"
+  DOCKER_IMAGE_TAG: "${CI_PIPELINE_IID}"
 
-.build-app:
+.build_template:
   stage: build
-  image: gradle:8.1.1-jdk21
+  allow_failure: false
+  variables:
+    DOCKER_BUILDKIT: 1
+    DOCKER_IMAGE_TAG: "${CI_PIPELINE_IID}"
+    DOCKER_KEEP_LOCAL_TAGS: 5
+    DOCKER_BUILD_CONTEXT: "."
+    DOCKER_FILE_PATH: "./.ci/Dockerfile"
+    DOCKER_BUILD_ARGS: ""
+  before_script:
+    - docker login --username=${CI_REGISTRY_USER} --password ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
   script:
-    - ./gradlew build ${EXTENTIONS_ARGS}
-  artifacts:
-    paths:
-      - src/main/resources/
-      - build/libs/
-      - .ci/Dockerfile
-      - .ci/.env
-      - .ci/entrypoint.sh
-    expire_in: 1 day
+    - >
+      docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_BUILD_CONTEXT}
+      --file ${DOCKER_FILE_PATH}
+      ${DOCKER_BUILD_ARGS}
+    - docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+  after_script:
+    - >-
+      docker images -q --filter reference="${DOCKER_IMAGE_NAME}:*" |
+      tail -n +$(($DOCKER_KEEP_LOCAL_TAGS+1)) |
+      xargs -r docker rmi -f || true
+    - docker builder prune -f
   tags:
-    - build-vm
+    - oleg-build
 
 .deploy-app:
   stage: deploy
-  image: docker:20.10.21
-  services:
-    - docker:20.10.21-dind
+  before_script:
+      - docker login --username=${CI_REGISTRY_USER} --password ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+      - docker ps -a -q --filter "name=${CI_PROJECT_NAME}" | xargs -r docker rm -f
   script:
-    - apk add gettext
-    - envsubst < .ci/.env > .env
-    - mv ./src/main/resources/*.yaml ./build/libs/
-    - mv ./src/main/resources/*.xml ./build/libs/
-    - docker build -t ${NAME} . --file .ci/Dockerfile
-    - docker ps -a -q --filter "name=${NAME}" | grep -q . && docker rm -f ${NAME} || true
-    - docker run -d --env-file=.env --network=${DOCKER_NET} -p ${EXT_PORT}:8443 --name ${NAME} ${NAME}
+    - docker run -d --name ${CI_PROJECT_NAME}-${PROJ} --net=${DOCKER_NET} --env-file .env ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+  tags:
+    - oleg-deploy
+
+
