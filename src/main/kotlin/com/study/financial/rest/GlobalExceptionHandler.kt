@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.context.request.WebRequest
-import java.time.LocalDateTime
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -52,6 +51,7 @@ class GlobalExceptionHandler {
         val errorDetails = ErrorDetails(
             ex.message ?: "Unknown error",
             request?.getDescription(false) ?: "Unknown request",
+            ex.stackTraceToString(),
         )
 
         return ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -61,5 +61,5 @@ class GlobalExceptionHandler {
 data class ErrorDetails(
     val message: String,
     val details: String,
-    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val trace: String? = null,
 )

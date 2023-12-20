@@ -3,12 +3,17 @@ package com.study.financial.rest.controller
 import com.study.financial.busines.ICrudService
 import com.study.financial.busines.service.UserService
 import com.study.financial.jpa.repository.JpaRepositoryWithUserId
+import com.study.financial.rest.ErrorDetails
 import com.study.financial.util.SecurityUtil
 import com.study.financial.validation.ValidUUID
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
+import java.util.UUID
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -22,9 +27,36 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
+@ApiResponses(
+    ApiResponse(
+        responseCode = "401",
+        description = "Не авторизован",
+        content = arrayOf(Content(schema = Schema(implementation = ErrorDetails::class))),
+    ),
+    ApiResponse(
+        responseCode = "404",
+        description = "Элемент не найден",
+        content = arrayOf(Content(schema = Schema(implementation = ErrorDetails::class))),
+    ),
+    ApiResponse(
+        responseCode = "500",
+        description = "Внутренняя ошибка сервера",
+        content = arrayOf(Content(schema = Schema(implementation = ErrorDetails::class))),
+    ),
+    ApiResponse(
+        responseCode = "201",
+        description = "Успешное выполнение",
+        content = arrayOf(Content(schema = Schema(implementation = Any::class))),
+    ),
+    ApiResponse(
+        responseCode = "204",
+        description = "Успешное выполнение",
+        content = arrayOf(),
+    ),
+
+)
 abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : Any, CM> {
     @Autowired
     lateinit var service: ICrudService<E, R, CM>

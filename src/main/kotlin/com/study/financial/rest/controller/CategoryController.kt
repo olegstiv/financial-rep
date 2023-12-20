@@ -1,7 +1,6 @@
 package com.study.financial.rest.controller
 
 import com.study.financial.jpa.entity.CategoryEntity
-import com.study.financial.jpa.repository.CategoryJpaRepository
 import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.rest.model.Category
 import com.study.financial.rest.model.CreateCategory
