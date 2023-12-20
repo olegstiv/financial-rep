@@ -30,10 +30,9 @@ stages:
       docker images -q --filter reference="${DOCKER_IMAGE_NAME}:*" |
       tail -n +$(($DOCKER_KEEP_LOCAL_TAGS+1)) |
       xargs -r docker rmi -f || true
-    - docker volume prune -f
     - docker builder prune -f
   tags:
-    - build-vm
+    - oleg-build
 
 .deploy-app:
   stage: deploy
@@ -49,6 +48,6 @@ stages:
         --env-file .env \
         ${DOCKER_IMAGE_NAME}:${{DOCKER_IMAGE_TAG}
   tags:
-    - dev-vm
+    - oleg-deploy
 
 
