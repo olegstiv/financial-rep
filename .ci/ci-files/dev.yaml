@@ -12,12 +12,7 @@ deploy-app:dev:
     - .deploy-app
   variables:
     NAME: api-study-financial
-    EXT_PORT: 8086
-    DB_NAME: financial
-    DB_PASS: financial
-    DB_USER: financial
-    SERVER_URL: 51.250.81.198
-    DOCKER_NET: study
+    DOCKER_NET: dev
     PROJ: develop
   only:
     - develop
