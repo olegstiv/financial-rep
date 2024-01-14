@@ -23,6 +23,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.stereotype.Component
 import java.io.IOException
 import java.io.OutputStream
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +41,6 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? = http
         .csrf { it.disable() }
-        .cors { it.disable() }
         .authorizeHttpRequests {
             it
                 .requestMatchers("/auth/**", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -55,8 +57,19 @@ class SecurityConfig(
                 .invalidateHttpSession(true)
         }
         .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
+        .cors {  it.configurationSource(corsConfigurationSource()) }
         .build()
 
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration().applyPermitDefaultValues()
+        configuration.allowedOrigins = arrayListOf("*") // или "*" для разрешения всех источников
+        configuration.allowedMethods = arrayListOf("GET", "POST", "PUT", "DELETE") // добавьте другие методы по необходимости
+        return UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", configuration)
+        }
+    }
 
 }
 
