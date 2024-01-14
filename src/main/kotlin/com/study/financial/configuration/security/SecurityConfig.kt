@@ -38,6 +38,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? = http
         .csrf { it.disable() }
+        .cors { it.disable() }
         .authorizeHttpRequests {
             it
                 .requestMatchers("/auth/**", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -55,6 +56,8 @@ class SecurityConfig(
         }
         .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
         .build()
+
+
 }
 
 @Component("customAuthenticationEntryPoint")
