@@ -5,6 +5,8 @@ import com.study.financial.rest.ErrorDetails
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import java.io.IOException
+import java.io.OutputStream
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -21,11 +23,10 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler
 import org.springframework.stereotype.Component
-import java.io.IOException
-import java.io.OutputStream
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -60,24 +61,24 @@ class SecurityConfig(
                 .invalidateHttpSession(true)
         }
         .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
-//        .cors {  it.configurationSource(corsConfigurationSource()) }
+        .cors {  it.configurationSource(corsConfigurationSource()) }
         .build()
 
 
-//    @Bean
-//    fun corsConfigurationSource(): CorsConfigurationSource {
-//        val configuration = CorsConfiguration().apply {
-//            allowedOriginPatterns = listOf("*")
-//            allowedOrigins = listOf("*")
-//            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-//            allowedHeaders = listOf("*")
-//            allowCredentials = true
-//        }
-//
-//        return UrlBasedCorsConfigurationSource().also {
-//            it.registerCorsConfiguration("/**", configuration)
-//        }
-//    }
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration().apply {
+            allowedOriginPatterns = listOf("*")
+            allowedOrigins = listOf("*")
+            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            allowedHeaders = listOf("*")
+            allowCredentials = true
+        }
+
+        return UrlBasedCorsConfigurationSource().also {
+            it.registerCorsConfiguration("/**", configuration)
+        }
+    }
 
 }
 
