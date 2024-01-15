@@ -26,6 +26,9 @@ import java.io.OutputStream
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
@@ -57,24 +60,33 @@ class SecurityConfig(
                 .invalidateHttpSession(true)
         }
         .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
-        .cors {  it.configurationSource(corsConfigurationSource()) }
+//        .cors {  it.configurationSource(corsConfigurationSource()) }
         .build()
 
 
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
-            allowedOriginPatterns = listOf("*")
-            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("*")
-            allowCredentials = true
-        }
+//    @Bean
+//    fun corsConfigurationSource(): CorsConfigurationSource {
+//        val configuration = CorsConfiguration().apply {
+//            allowedOriginPatterns = listOf("*")
+//            allowedOrigins = listOf("*")
+//            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+//            allowedHeaders = listOf("*")
+//            allowCredentials = true
+//        }
+//
+//        return UrlBasedCorsConfigurationSource().also {
+//            it.registerCorsConfiguration("/**", configuration)
+//        }
+//    }
 
-        return UrlBasedCorsConfigurationSource().also {
-            it.registerCorsConfiguration("/**", configuration)
-        }
+}
+
+@Configuration
+@EnableWebMvc
+class CorsConfig : WebMvcConfigurer {
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**").allowedOrigins("*")
     }
-
 }
 
 @Component("customAuthenticationEntryPoint")

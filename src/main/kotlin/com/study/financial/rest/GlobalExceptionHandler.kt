@@ -6,6 +6,7 @@ import mu.KLogging
 import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -61,6 +62,22 @@ class GlobalExceptionHandler {
                 log.error(ex.message, ex)
             }
     }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
+    @ResponseBody
+    fun handleException(ex: HttpMediaTypeNotSupportedException, request: WebRequest?): ResponseEntity<*> {
+        val errorDetails = ErrorDetails(
+            ex.message ?: "Unknown error",
+            request?.getDescription(false) ?: "Unknown request",
+            ex.stackTraceToString(),
+        )
+
+        return ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+            .also {
+                log.error(ex.message, ex)
+            }
+    }
+
 
     companion object: KLogging()
 }
