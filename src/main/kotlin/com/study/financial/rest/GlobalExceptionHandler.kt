@@ -2,6 +2,8 @@ package com.study.financial.rest
 
 import com.study.financial.exception.RegisterException
 import jakarta.persistence.EntityNotFoundException
+import mu.KLogging
+import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -55,7 +57,12 @@ class GlobalExceptionHandler {
         )
 
         return ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR)
+            .also {
+                log.error(ex.message, ex)
+            }
     }
+
+    companion object: KLogging()
 }
 
 data class ErrorDetails(
