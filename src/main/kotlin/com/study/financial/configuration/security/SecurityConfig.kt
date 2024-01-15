@@ -44,6 +44,7 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? = http
+        .cors {  it.configurationSource(corsConfigurationSource()) }
         .csrf { it.disable() }
         .authorizeHttpRequests {
             it
@@ -61,15 +62,13 @@ class SecurityConfig(
                 .invalidateHttpSession(true)
         }
         .exceptionHandling { it.authenticationEntryPoint(authEntryPoint) }
-        .cors {  it.configurationSource(corsConfigurationSource()) }
         .build()
 
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
+        val configuration = CorsConfiguration().applyPermitDefaultValues().apply {
             allowedOriginPatterns = listOf("*")
-            allowedOrigins = listOf("*")
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
             allowCredentials = true
@@ -80,14 +79,6 @@ class SecurityConfig(
         }
     }
 
-}
-
-@Configuration
-@EnableWebMvc
-class CorsConfig : WebMvcConfigurer {
-    override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**").allowedOrigins("*")
-    }
 }
 
 @Component("customAuthenticationEntryPoint")
