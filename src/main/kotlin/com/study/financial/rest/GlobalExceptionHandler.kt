@@ -4,6 +4,7 @@ import com.study.financial.exception.RegisterException
 import jakarta.persistence.EntityNotFoundException
 import mu.KLogging
 import org.hibernate.query.sqm.tree.SqmNode.log
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpMediaTypeNotSupportedException
@@ -31,6 +32,16 @@ class GlobalExceptionHandler {
             exception.message,
             "Register exception",
         )
+        return ResponseEntity(errorDetails, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun dataIntegrityViolationException(exception: DataIntegrityViolationException): ResponseEntity<ErrorDetails> {
+        val errorDetails = ErrorDetails(
+            "Entity already exists",
+            "Data integrity violation exception"
+        )
+
         return ResponseEntity(errorDetails, HttpStatus.CONFLICT)
     }
 
