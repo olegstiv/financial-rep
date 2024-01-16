@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.lang.RuntimeException
 import java.util.UUID
+import org.springframework.transaction.annotation.Transactional
 
 interface ICrudService<T : Any, R : JpaRepositoryWithUserId<T>, CM> {
 
@@ -26,6 +27,7 @@ interface ICrudService<T : Any, R : JpaRepositoryWithUserId<T>, CM> {
         return repository.getByIdAndUserId(id, userId) ?: throw notFoundException
     }
 
+    @Transactional
     fun save(userId: UUID, model: CM): T {
         return repository.save(model.toEntity())
     }
@@ -34,6 +36,7 @@ interface ICrudService<T : Any, R : JpaRepositoryWithUserId<T>, CM> {
         return repository.save(model.toEntity())
     }
 
+    @Transactional
     fun delete(userId: UUID, id: UUID) {
         repository.deleteByIdAndUserId(id, userId)
     }
