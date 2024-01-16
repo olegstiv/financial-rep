@@ -79,7 +79,7 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
             .content
     }
 
-    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping("{id}/", produces = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(summary = "Получить элемент по идентификатору", security = [SecurityRequirement(name = "Auth JWT")])
     fun findById(
         @ValidUUID
@@ -106,7 +106,7 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
         return ResponseEntity.status(HttpStatus.CREATED).body(created)
     }
 
-    @PutMapping("/{id}", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping("{id}/", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(summary = "Обновить элемент", security = [SecurityRequirement(name = "Auth JWT")])
     fun update(
         @ValidUUID
@@ -125,7 +125,7 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
         return ResponseEntity.ok(updated)
     }
 
-    @DeleteMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping("{id}/", produces = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(summary = "Удалить элемент", security = [SecurityRequirement(name = "Auth JWT")])
     fun delete(
         @ValidUUID
