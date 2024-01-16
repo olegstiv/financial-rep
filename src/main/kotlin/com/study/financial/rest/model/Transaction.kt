@@ -3,9 +3,9 @@ package com.study.financial.rest.model
 import com.study.financial.jpa.entity.TransactionEntity
 import com.study.financial.validation.ValidUUID
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
@@ -26,6 +26,7 @@ data class CreateTransaction(
     @field:Schema(description = "Сумма транзакции", required = true, example = "1000")
     @field:NotNull(message = "Сумма транзакции не должна быть null")
     @field:Positive(message = "Сумма транзакции должна быть больше 0")
+    @field:Max(value = 1_000_000_000, message = "Сумма транзакции должна быть меньше 1_000_000_000")
     val amount: Double? = null,
 
     @field:Schema(description = "Тип транзакции", required = true, example = "INCOME")
@@ -73,7 +74,7 @@ data class Transaction(
     @field:Schema(description = "Тип транзакции", required = true, example = "INCOME")
     val type: TransactionEntity.Type,
 
-    @field:Schema(description = "Категория", required = true, example = "Запрлата")
+    @field:Schema(description = "Категория", required = true)
     val category: Category,
 
     @field:Schema(description = "Дата и время транзакции", required = true, example = "2021-07-01T00:00:00")

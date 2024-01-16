@@ -167,3 +167,19 @@ databaseChangeLog:
                   type: varchar(30)
                   constraints:
                     nullable: true
+  - changeSet:
+        id: 1702500024-edit-type-amount
+        author: Oleg Kravchuk
+        changes:
+          - modifyDataType:
+              tableName: wallets
+              columnName: balance
+              newDataType: double
+  - changeSet:
+        id: 1702500024-edit-type-amount-transaction
+        author: Oleg Kravchuk
+        changes:
+          - modifyDataType:
+              tableName: transactions
+              columnName: amount
+              newDataType: double

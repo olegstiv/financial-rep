@@ -2,6 +2,7 @@ package com.study.financial.rest.model
 
 import com.study.financial.jpa.entity.WalletEntity
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PositiveOrZero
@@ -22,6 +23,7 @@ data class CreateWallet(
     @field:NotNull(message = "Баланс кошелька не должен быть null")
     @field:PositiveOrZero(message = "Баланс кошелька должен быть положительным числом")
     @field:Schema(description = "Баланс кошелька", required = true, example = "0", defaultValue = "0")
+    @field:Max(value = 1_000_000_000, message = "Баланс кошелька должен быть меньше 1_000_000_000")
     val balance: Double = 0.0,
 )
 
