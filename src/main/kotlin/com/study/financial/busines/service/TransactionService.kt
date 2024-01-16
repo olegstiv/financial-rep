@@ -11,9 +11,10 @@ import com.study.financial.jpa.repository.UserJpaRepository
 import com.study.financial.jpa.repository.WalletJpaRepository
 import com.study.financial.rest.model.CreateTransaction
 import jakarta.persistence.EntityNotFoundException
-import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
+import org.springframework.stereotype.Service
 
 @Service
 class TransactionService(
@@ -27,7 +28,8 @@ class TransactionService(
         amount = amount!!.toBigDecimal(),
         type = type!!,
         category = getCategoryById(UUID.fromString(categoryId!!)),
-        dateTime = LocalDateTime.parse(dateTime) ?: LocalDateTime.now(),
+        dateTime = dateTime?.let { DateTimeFormatter.ISO_DATE_TIME.parse(it, LocalDateTime::from) }
+            ?: LocalDateTime.now()
     )
 
 //    override fun save(userId: UUID, model: CreateTransaction): TransactionEntity {

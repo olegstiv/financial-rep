@@ -45,13 +45,8 @@ data class CreateTransaction(
 
     @field:Schema(
         description = "Дата и время транзакции",
-        required = true,
-        example = "2021-07-01T00:00:00",
+        required = false,
         format = "date-time",
-    )
-    @field:Pattern(
-        regexp = "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})\$",
-        message = "Дата и время транзакции должны быть в формате yyyy-MM-ddTHH:mm:ss",
     )
     val dateTime: String? = null,
 
