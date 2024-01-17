@@ -23,6 +23,7 @@ class UserService(
     private val authenticationManager: AuthenticationManager,
 ) : UserDetailsService {
 
+    @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
         return userJpaRepository.findByLogin(username)
             ?: throw UsernameNotFoundException("User not found")
@@ -55,7 +56,7 @@ class UserService(
         )
 
         val user = userJpaRepository.findByLogin(authenticationRequest.username!!)
-            ?: throw EntityNotFoundException("User not found")
+            ?: throw UsernameNotFoundException("User not found")
 
         return AuthenticationResponse(jwtService.generateToken(user))
     }

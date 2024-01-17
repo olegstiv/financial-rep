@@ -2,6 +2,8 @@ package com.study.financial.rest.model
 
 import com.study.financial.jpa.entity.TransactionEntity
 import com.study.financial.validation.ValidUUID
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
@@ -10,6 +12,42 @@ import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 import java.util.UUID
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.web.bind.annotation.RequestParam
+
+@ParameterObject
+data class TransactionFilters(
+    @field:Parameter(
+        description = "От какой даты искать транзакции",
+        required = false,
+        schema = Schema(format = "date-time"),
+    )
+    @RequestParam
+    val from: String? = null,
+    @field:Parameter(
+        description = "До какой даты искать транзакции",
+        required = false,
+        schema = Schema(format = "date-time"),
+    )
+    @RequestParam
+    val to: String? = null,
+    @field:Parameter(
+        description = "Уникальные идентификаторы кошельков",
+//        example = "3fa85f64-5717-4562-b3fc-2c963f66afa6,3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        required = false,
+        array = ArraySchema(schema = Schema(format = "uuid")),
+    )
+    @RequestParam
+    val walletIds: List<UUID>? = null,
+    @field:Parameter(
+        description = "Уникальные идентификаторы категорий",
+//        example = "3fa85f64-5717-4562-b3fc-2c963f66afa6,3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        required = false,
+        array = ArraySchema(schema = Schema(format = "uuid")),
+    )
+    @RequestParam
+    val categoryIds: List<UUID>? = null,
+): Filters
 
 data class CreateTransaction(
     @field:Schema(

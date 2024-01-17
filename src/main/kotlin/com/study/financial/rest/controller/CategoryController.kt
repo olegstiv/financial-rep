@@ -4,6 +4,7 @@ import com.study.financial.jpa.entity.CategoryEntity
 import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.rest.model.Category
 import com.study.financial.rest.model.CreateCategory
+import com.study.financial.rest.model.Filters
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/categories/")
 @Tag(name = "Category", description = "API для работы с категорями")
 class CategoryController() :
-    BaseCrudController<CategoryEntity, JpaRepositoryWithUserId<CategoryEntity>, Category, CreateCategory>() {
+    BaseCrudController<CategoryEntity, JpaRepositoryWithUserId<CategoryEntity>, Category, CreateCategory, Filters>() {
     override fun CategoryEntity.toModel(): Category {
         return Category(
             id = id,

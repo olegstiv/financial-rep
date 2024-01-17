@@ -4,6 +4,7 @@ import com.study.financial.busines.ICrudService
 import com.study.financial.busines.service.UserService
 import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.rest.ErrorDetails
+import com.study.financial.rest.model.Filters
 import com.study.financial.util.SecurityUtil
 import com.study.financial.validation.ValidUUID
 import io.swagger.v3.oas.annotations.Operation
@@ -57,9 +58,9 @@ import org.springframework.web.bind.annotation.RestController
     ),
 
 )
-abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : Any, CM> {
+abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : Any, CM, FILTER: Filters> {
     @Autowired
-    lateinit var service: ICrudService<E, R, CM>
+    lateinit var service: ICrudService<E, R, CM, FILTER>
 
     @Autowired
     lateinit var userService: UserService
@@ -73,8 +74,9 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
     )
     fun findAll(
         @ParameterObject pageable: Pageable,
+        @ParameterObject filter: FILTER? = null,
     ): List<M> {
-        return service.findAll(currentUserId, pageable)
+        return service.findAll(currentUserId, pageable, filter)
             .map { it.toModel() }
             .content
     }

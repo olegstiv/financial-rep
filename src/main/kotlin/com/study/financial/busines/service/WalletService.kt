@@ -6,6 +6,7 @@ import com.study.financial.jpa.repository.JpaRepositoryWithUserId
 import com.study.financial.jpa.repository.UserJpaRepository
 import com.study.financial.jpa.repository.WalletJpaRepository
 import com.study.financial.rest.model.CreateWallet
+import com.study.financial.rest.model.Filters
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service
 class WalletService(
     override val repository: WalletJpaRepository,
     override val userRepository: UserJpaRepository,
-) : ICrudService<WalletEntity, JpaRepositoryWithUserId<WalletEntity>, CreateWallet> {
+) : ICrudService<WalletEntity, JpaRepositoryWithUserId<WalletEntity>, CreateWallet, Filters> {
     override fun CreateWallet.toEntity() = WalletEntity(
         name = name!!,
         type = type!!,

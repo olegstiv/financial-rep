@@ -10,11 +10,17 @@ import com.study.financial.jpa.repository.TransactionJpaRepository
 import com.study.financial.jpa.repository.UserJpaRepository
 import com.study.financial.jpa.repository.WalletJpaRepository
 import com.study.financial.rest.model.CreateTransaction
+import com.study.financial.rest.model.TransactionFilters
+import jakarta.persistence.EntityManager
 import jakarta.persistence.EntityNotFoundException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TransactionService(
@@ -22,7 +28,8 @@ class TransactionService(
     override val userRepository: UserJpaRepository,
     private val walletJpaRepository: WalletJpaRepository,
     private val categoryJpaRepository: CategoryJpaRepository,
-) : ICrudService<TransactionEntity, JpaRepositoryWithUserId<TransactionEntity>, CreateTransaction> {
+    private val entityManager: EntityManager
+) : ICrudService<TransactionEntity, JpaRepositoryWithUserId<TransactionEntity>, CreateTransaction, TransactionFilters> {
     override fun CreateTransaction.toEntity() = TransactionEntity(
         wallet = getWalletById(UUID.fromString(walletId!!)),
         amount = amount!!.toBigDecimal(),
@@ -31,6 +38,47 @@ class TransactionService(
         dateTime = dateTime?.let { DateTimeFormatter.ISO_DATE_TIME.parse(it, LocalDateTime::from) }
             ?: LocalDateTime.now()
     )
+
+    @Transactional
+    override fun findAll(userId: UUID, pageable: Pageable, filter: TransactionFilters?): Page<TransactionEntity> {
+        var sqlFilter = ""
+        val params = mutableMapOf<String, Any?>()
+
+        if (!filter?.walletIds.isNullOrEmpty()) {
+            sqlFilter += " AND t.wallet.id IN (:walletIds)"
+            params["walletIds"] = filter?.walletIds
+        }
+
+        if (filter?.categoryIds.isNullOrEmpty()) {
+            sqlFilter += " AND t.category.id IN (:categoryIds)"
+            params["categoryIds"] = filter?.categoryIds
+        }
+
+        if (filter?.to != null) {
+            sqlFilter += " AND t.dateTime <= :to"
+            params["to"] = DateTimeFormatter.ISO_DATE_TIME.parse(filter.to, LocalDateTime::from)
+        }
+
+        if (filter?.from != null) {
+            sqlFilter += " AND t.dateTime >= :from"
+            params["from"] = DateTimeFormatter.ISO_DATE_TIME.parse(filter.from, LocalDateTime::from)
+        }
+
+        val query = entityManager.createQuery(
+            """
+                SELECT t FROM TransactionEntity t
+                WHERE t.wallet.user.id = :userId
+                $sqlFilter
+            """.trimIndent(),
+            TransactionEntity::class.java
+        ).apply { params.forEach { (k, v) -> setParameter(k, v) } }
+            .setParameter("userId", userId)
+
+
+        return PageImpl(query.resultList, pageable, query.resultList.size.toLong())
+
+
+    }
 
 //    override fun save(userId: UUID, model: CreateTransaction): TransactionEntity {
 //        val entity = model.toEntity()
