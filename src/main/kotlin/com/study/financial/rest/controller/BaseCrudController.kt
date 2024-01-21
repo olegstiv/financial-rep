@@ -127,7 +127,7 @@ abstract class BaseCrudController<E : Any, R : JpaRepositoryWithUserId<E>, M : A
         return ResponseEntity.ok(updated)
     }
 
-    @DeleteMapping("{id}/", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping("{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(summary = "Удалить элемент", security = [SecurityRequirement(name = "Auth JWT")])
     fun delete(
         @ValidUUID

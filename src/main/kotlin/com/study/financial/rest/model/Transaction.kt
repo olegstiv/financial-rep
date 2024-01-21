@@ -24,6 +24,7 @@ data class TransactionFilters(
     )
     @RequestParam
     val from: String? = null,
+
     @field:Parameter(
         description = "До какой даты искать транзакции",
         required = false,
@@ -31,6 +32,7 @@ data class TransactionFilters(
     )
     @RequestParam
     val to: String? = null,
+
     @field:Parameter(
         description = "Уникальные идентификаторы кошельков",
 //        example = "3fa85f64-5717-4562-b3fc-2c963f66afa6,3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -39,6 +41,7 @@ data class TransactionFilters(
     )
     @RequestParam
     val walletIds: List<UUID>? = null,
+
     @field:Parameter(
         description = "Уникальные идентификаторы категорий",
 //        example = "3fa85f64-5717-4562-b3fc-2c963f66afa6,3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -47,7 +50,7 @@ data class TransactionFilters(
     )
     @RequestParam
     val categoryIds: List<UUID>? = null,
-): Filters
+) : Filters
 
 data class CreateTransaction(
     @field:Schema(
@@ -89,7 +92,7 @@ data class CreateTransaction(
     )
     val dateTime: String? = null,
 
-)
+    )
 
 data class Transaction(
     @field:Schema(
@@ -118,4 +121,4 @@ data class Transaction(
     @field:Schema(description = "Дата и время транзакции", required = true, example = "2021-07-01T00:00:00")
     val dateTime: LocalDateTime,
 
-)
+    )

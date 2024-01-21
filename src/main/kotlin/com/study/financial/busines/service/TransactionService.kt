@@ -49,7 +49,7 @@ class TransactionService(
             params["walletIds"] = filter?.walletIds
         }
 
-        if (filter?.categoryIds.isNullOrEmpty()) {
+        if (!filter?.categoryIds.isNullOrEmpty()) {
             sqlFilter += " AND t.category.id IN (:categoryIds)"
             params["categoryIds"] = filter?.categoryIds
         }
